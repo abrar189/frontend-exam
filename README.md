@@ -12,5 +12,3 @@ This repository has starter code to start working on creating your own exam weba
 
 4. When you seed the data for the first time, make sure to add your instructor email as user
    quraanrazan282@gmail.com in order to be able to login with your webapp and do the CRUD operations
-
-

@@ -17,7 +17,7 @@ class AllDataAPI extends Component {
   // https://ltuc-asac-api.herokuapp.com/allColorData
 
   componentDidMount = async () => {
-    let result = await axios.get(`http://localhost:3005/allColorData`)
+    let result = await axios.get(`${process.env.REACT_APP_SERVER}/allColorData`)
     this.setState({
       dataColor: result.data,
     })
@@ -32,8 +32,8 @@ class AllDataAPI extends Component {
       imageUrl:  this.state.dataColor[index].imageUrl,
     };
 
-    await axios.post('http://localhost:3005/addtofav', dataObj)
-    
+    await axios.post(`${process.env.REACT_APP_SERVER}/addtofav`, dataObj)
+
   }
 
 

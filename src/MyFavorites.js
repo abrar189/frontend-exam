@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MyFavorites.css';
 import axios from 'axios';
-import { Card,Button } from 'react-bootstrap';
 import { withAuth0 } from '@auth0/auth0-react';
 import Cardfav from './components/Cardfav';
 import Updatemodel from './components/Updatemodel';
@@ -21,7 +20,7 @@ class MyFavorites extends React.Component {
   componentDidMount = async () => {
     
     let email  = this.props.auth0.user.email;
-    let result = await axios.get(`http://localhost:3005/datafromdb?email=${email}`)
+    let result = await axios.get(`${process.env.REACT_APP_SERVER}/datafromdb?email=${email}`)
     this.setState({
       colorData: result.data
     })
@@ -31,7 +30,7 @@ class MyFavorites extends React.Component {
   deletCard = async (index)=>{
 
     let email  = this.props.auth0.user.email;
-    let resdelet=await axios.delete(`http://localhost:3005/delete/${index}?email=${email}`);
+    let resdelet=await axios.delete(`${process.env.REACT_APP_SERVER}/delete/${index}?email=${email}`);
     this.setState({
       colorData:resdelet.data,
     })
@@ -65,7 +64,7 @@ class MyFavorites extends React.Component {
       imageUrl:  e.target.Cimg.value,
     };
 
-    let resdelet=await axios.put(`http://localhost:3005/update/${this.state.index}`,dataObj);
+    let resdelet=await axios.put(`${process.env.REACT_APP_SERVER}/update/${this.state.index}`,dataObj);
     this.setState({
       colorData:resdelet.data,
       

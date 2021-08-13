@@ -5,37 +5,34 @@ import Cardapi from './components/Cardapi';
 
 
 
-class AllDataAPI extends Component {
 
+class AllDataAPI extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataColor: [],
+      colorData: [],
     }
   }
 
-  // https://ltuc-asac-api.herokuapp.com/allColorData
-
   componentDidMount = async () => {
-    let result = await axios.get(`${process.env.REACT_APP_SERVER}/allColorData`)
+
+    let result = await axios.get(`${process.env.REACT_APP_SERVER}/apiData`)
     this.setState({
-      dataColor: result.data,
+      colorData: result.data
     })
+    console.log(this.state.colorData);
+
   }
 
-
-  addtofav = async (index) => {
-
+  addToFav = async (index) => {
     const dataObj = {
       email: this.props.auth0.user.email,
-      title: this.state.dataColor[index].title,
-      imageUrl:  this.state.dataColor[index].imageUrl,
-    };
+      title: this.state.colorData[index].title,
+      imageUrl: this.state.colorData[index].imageUrl
 
-    await axios.post(`${process.env.REACT_APP_SERVER}/addtofav`, dataObj)
-
+    }
+    await axios.post(`${process.env.REACT_APP_SERVER}/addtofav`,dataObj)
   }
-
 
   render() {
     return (
@@ -44,14 +41,14 @@ class AllDataAPI extends Component {
         <p>
           This is a collection of my favorites
         </p>
-        <Cardapi apidata={this.state.dataColor} addtofav={this.addtofav} />
+        <Cardapi colorData={this.state.colorData} addToFav={this.addToFav} />
       </>
 
     )
   }
 
-    
-  
+
+
 
 }
 

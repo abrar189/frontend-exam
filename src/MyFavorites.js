@@ -1,75 +1,72 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MyFavorites.css';
-import axios from 'axios';
 import { withAuth0 } from '@auth0/auth0-react';
+import axios from 'axios';
 import Cardfav from './components/Cardfav';
-import Updatemodel from './components/Updatemodel';
+import UpdateModel from './components/UpdateModel';
+
 
 class MyFavorites extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       colorData: [],
-      showmodel: false,
-      index:0,
-      selectData:{},
+      index: 0,
+      showModal: false,
+      selectData:{}
+
     }
   }
-  // http://localhost:3005/datafromdb
+  // http://localhost:3006/DBdata?email=
   componentDidMount = async () => {
-    
-    let email  = this.props.auth0.user.email;
-    let result = await axios.get(`${process.env.REACT_APP_SERVER}/datafromdb?email=${email}`)
+    let email = this.props.auth0.user.email;
+    let result = await axios.get(`${process.env.REACT_APP_SERVER}/DBdata?email=${email}`)
     this.setState({
       colorData: result.data
     })
     console.log(this.state.colorData);
+
   }
-
-  deletCard = async (index)=>{
-
-    let email  = this.props.auth0.user.email;
-    let resdelet=await axios.delete(`${process.env.REACT_APP_SERVER}/delete/${index}?email=${email}`);
+  deleteCard = async (index) => {
+    let email = this.props.auth0.user.email;
+    let result = await axios.delete(`${process.env.REACT_APP_SERVER}/deletecolor/${index}?email=${email}`);
     this.setState({
-      colorData:resdelet.data,
+      colorData: result.data
+    })
+
+  }
+  updateCard = async (e) => {
+    e.preventDefault()
+    const objData = {
+      email: this.props.auth0.user.email,
+      title: e.target.title.value,
+      imageUrl: e.target.imageUrl.value,
+
+    }
+    let result = await axios.put(`${process.env.REACT_APP_SERVER}/update/${this.state.index}`, objData)
+    this.setState({
+      colorData: result.data,
     })
   }
-
-
-
-  showUpdate = async (index)=>{
+  handleClose = async () => {
     this.setState({
-      showmodel:true,
-      index:index,
-      selectData:{
+      showModal: false
+
+    })
+  }
+  showUpdateModal = async (index) => {
+    this.setState({
+      showModal: true,
+      index: index,
+      selectData: {
         title: this.state.colorData[index].title,
-      imageUrl:  this.state.colorData[index].imageUrl,
+        imageUrl: this.state.colorData[index].imageUrl
+
       }
     })
   }
 
-  close = async ()=>{
-    this.setState({
-      showmodel:false,
-      })
-  }
-
-  updateCard = async (e)=>{
-    e.preventDefault()
-
-    const dataObj = {
-      email: this.props.auth0.user.email,
-      title: e.target.Cname.value,
-      imageUrl:  e.target.Cimg.value,
-    };
-
-    let resdelet=await axios.put(`${process.env.REACT_APP_SERVER}/update/${this.state.index}`,dataObj);
-    this.setState({
-      colorData:resdelet.data,
-      
-    })
-  }
   render() {
     return (
       <>
@@ -77,9 +74,8 @@ class MyFavorites extends React.Component {
         <p>
           This is a collection of my favorites
         </p>
-        <Cardfav colorData={this.state.colorData} deletCard={this.deletCard} showUpdate={this.showUpdate}/>
-
-        <Updatemodel show={this.state.showmodel} close={this.close} selectData={this.state.selectData} updateCard={this.updateCard}/>
+        <Cardfav colorData={this.state.colorData} deleteCard={this.deleteCard} showUpdateModal={this.showUpdateModal} />
+        <UpdateModel handleClose={this.handleClose} show={this.state.showModal} selectData={this.state.selectData} updateCard={this.updateCard}/>
       </>
 
     )
